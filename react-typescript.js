@@ -41,6 +41,12 @@ module.exports = {
         },
       },
       rules: {
+        '@typescript-eslint/no-misused-promises': [
+          'error',
+          {
+            checksVoidReturn: false,
+          },
+        ],
         '@typescript-eslint/no-use-before-define': [
           'error',
           {

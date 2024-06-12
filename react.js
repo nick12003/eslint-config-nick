@@ -46,14 +46,14 @@ module.exports = {
       },
     ],
     // Must use import { xxx } from 'react'; instead
-    'no-restricted-imports': [
-      'error',
-      {
-        name: 'react',
-        importNames: ['default'],
-        message: "use import { xxx } from 'react'; instead",
-      },
-    ],
+    // 'no-restricted-imports': [
+    //   'error',
+    //   {
+    //     name: 'react',
+    //     importNames: ['default'],
+    //     message: "use import { xxx } from 'react'; instead",
+    //   },
+    // ],
 
     // for preventing "'React' was used before it was defined"
     'no-use-before-define': 'off',

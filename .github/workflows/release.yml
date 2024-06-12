@@ -1,38 +1,50 @@
-name: Release
+name: release
+
 on:
   push:
     branches:
       - main
 
 permissions:
-  contents: read # for checkout
+  contents: write
+  pull-requests: write
 
 jobs:
-  release:
-    name: Release
+  release-please:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write # to be able to publish a GitHub release
-      issues: write # to be able to comment on released issues
-      pull-requests: write # to be able to comment on released pull requests
-      id-token: write # to enable use of OIDC for npm provenance
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: release-please
+        id: release
+        uses: googleapis/release-please-action@v4
         with:
-          fetch-depth: 0
-      - uses: pnpm/action-setup@v3
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release-type: node
+        # The logic below handles the npm publication:
+      - uses: actions/checkout@v4
+        # these if statements ensure that a publication only occurs when
+        # a new release is created:
+        if: ${{ steps.release.outputs.release_created }}
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
         with:
           version: 8
+        if: ${{ steps.release.outputs.release_created }}
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
-          node-version: 'lts/*'
-          cache: 'pnpm'
-      - name: Install dependencies
-        run: pnpm install
-      - name: Release
+          node-version-file: '.nvmrc'
+          cache: pnpm
+          registry-url: 'https://registry.npmjs.org'
+        if: ${{ steps.release.outputs.release_created }}
+      - name: publish
+        run: |
+          pnpm install
+          pnpm publish --access public --no-git-checks
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx semantic-release
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        if: ${{ steps.release.outputs.release_created }}
+      - name: release info
+        env:
+          realese-output: ${{ toJson(steps.release.outputs) }}
+        run: |
+          echo $realese-output

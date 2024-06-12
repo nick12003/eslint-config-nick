@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/nick12003/eslint-config-nick/compare/v1.1.0...v1.1.1) (2024-06-12)
+
+
+### Bug Fixes
+
+* typescript rules ([6680823](https://github.com/nick12003/eslint-config-nick/commit/668082343aedd1351b8095194bed5be29f182cd0))
+
 ## [1.1.0](https://github.com/nick12003/eslint-config-nick/compare/v1.0.1...v1.1.0) (2024-06-12)
 
 
